@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PackgeDemo" default="create_all_apks">
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    <loadproperties srcFile="build.properties"/>
+
+    <!-- load current time -->
+    <tstamp>
+        <format property="CURRENT_TIME" pattern="ddhhmm"/>
+    </tstamp>
+
+    <property name="current_time" value="${CURRENT_TIME}"/>
+
+    <condition property="folder_exist">
+        <and>
+            <available file="${dist_folder}" type="dir"/>
+        </and>
+    </condition>
+
+    <target name="create_all_apks">
+        <echo message="umeng_channel_all : ${umeng_channel_all}"/>
+        <for list="${umeng_channel_all}" param="onechannel">
+            <sequential>
+                <antcall target="create_apk">
+                    <param name="onechannel" value="${onechannel}"/>
+                </antcall>
+            </sequential>
+        </for>
+    </target>
+
+    <target name="create_apk">
+        <property name="umeng_channel" value="${one_channel}"/>
+        <antcall target="init_temp_folder"/>
+        <ant antfile="replace_names_and_keys.xml"/>
+        <ant antfile="ant_build.xml" dir="${dist_folder}" target="clean"/>
+        <ant antfile="ant_build.xml" dir="${dist_folder}" target="debug"/>
+        <ant antfile="ant_build.xml" dir="${dist_folder}" target="release"/>
+        <ant antfile="build_copy_apk_2_publish.xml" target="default"/>
+    </target>
+
+    <target name="init_temp_folder">
+        <antcall target="clean_last_files"/>
+        <ant antfile="copy_file_to_temp_folder.xml" target="copy_files"/>
+    </target>
+
+    <target name="clean_last_files" if="folder_exist">
+        <echo message="Delete old files  ${dist_folder}"/>
+        <delete dir="${dist_folder}"/>
+    </target>
+
+
+
+</project>

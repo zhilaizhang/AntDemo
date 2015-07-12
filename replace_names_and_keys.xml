@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CopyFile" default="replace_start">
+    <loadproperties srcFile="build.properties"/>
+
+    <target name="replace_start">
+        <echo message="replace_start"/>
+        <antcall target="replace_umeng_key"/>
+        <antcall target="replace_umeng_qudao"/>
+    </target>
+
+    <target name="replace_umeng_key">
+        <echo message="Replace umeng key to ${umeng_key}"/>
+        <replace file="${dist_folder}/AndroidManifest.xml" token="{tag_umengkey}"
+                 value="${umeng_key}" encoding="UTF-8"/>
+    </target>
+
+    <target name="replace_umeng_qudao">
+        <echo message="Replace umeng qudao to ${umeng_qudao}"/>
+        <replace file="${dist_folder}/AndroidManifest.xml" token="{tag_qudao}"
+                 value="${umeng_qudao}" encoding="UTF-8"/>
+    </target>
+
+</project>

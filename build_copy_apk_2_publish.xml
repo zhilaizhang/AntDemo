@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="CopyAPK4Publish" basedir="." default="default">
+    <!-- release apk MainActivity-release-->
+    <property name="new_apk_file_in_bin" value="${dist_folder}/bin/MainActivity-debug.apk"/>
+    <property name="new_apk_file_to_publish"
+              value="../Apk4Publish/${app_build_name}_${umeng_qudao}_${version_name}.${version_code}.${current_time}.apk"/>
+
+    <condition property="publish_folder_not_exist">
+        <not>
+            <available file="../Apk4Publish" type="dir"/>
+        </not>
+    </condition>
+
+
+    <condition property="code_apk_file_exist">
+        <and>
+            <available file="${new_apk_file_in_bin}" type="file"/>
+        </and>
+    </condition>
+
+    <!-- Create release apk folder for copy apk file in -->
+    <target name="create_folder" if="publish_folder_not_exist">
+        <mkdir dir="../Apk4Publish"/>
+    </target>
+
+    <!-- If already exist CodeVersion APK, rename old version -->
+    <target name="rename_exist_code_apk" if="code_apk_file_exist">
+        <echo
+                message="${new_apk_file_in_bin} already exist, rename it to ${new_apk_file_to_publish}"/>
+        <move file="${new_apk_file_in_bin}" tofile="${new_apk_file_to_publish}"/>
+    </target>
+
+    <!-- Copy new apk for 2 publish folder -->
+    <target name="copy_apk_2_publish">
+        <echo message="Copy apk file 2 publish folder ...... "/>
+        <copy file="${new_apk_file_in_bin}" tofile="${new_apk_file_to_publish}"
+              overwrite="true"/>
+    </target>
+
+
+    <target name="default">
+        <antcall target="create_folder"/>
+        <antcall target="rename_exist_code_apk"/>
+    </target>
+</project>
